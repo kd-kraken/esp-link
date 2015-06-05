@@ -11,6 +11,14 @@
 #include "serled.h"
 #include "console.h"
 
+#if INVERSE_RESET_STATE == 0
+	#define RESET_STATE_A 1
+	#define RESET_STATE_B 0
+#else
+	#define RESET_STATE_A 0
+	#define RESET_STATE_B 1
+#endif
+
 static uint8_t mcu_reset_pin, mcu_isp_pin;
 
 static struct espconn serbridgeConn;
@@ -148,11 +156,11 @@ telnetUnwrap(uint8_t *inBuf, int len, uint8_t state)
 			switch (c) {
 			case DTR_ON:
 				os_printf("MCU reset gpio%d\n", mcu_reset_pin);
-				GPIO_OUTPUT_SET(mcu_reset_pin, 0);
+				GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_B);
 				os_delay_us(100L);
 				break;
 			case DTR_OFF:
-				GPIO_OUTPUT_SET(mcu_reset_pin, 1);
+				GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_A);
 				os_delay_us(100L);
 				break;
 			case RTS_ON:
@@ -194,11 +202,11 @@ static void ICACHE_FLASH_ATTR serbridgeRecvCb(void *arg, char *data, unsigned sh
 			os_printf("MCU Reset=%d ISP=%d\n", mcu_reset_pin, mcu_isp_pin);
 			os_delay_us(2*1000L); // time for os_printf to happen
 			// send reset to arduino/ARM
-			GPIO_OUTPUT_SET(mcu_reset_pin, 0);
+			GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_B);
 			os_delay_us(100L);
 			GPIO_OUTPUT_SET(mcu_isp_pin, 0);
 			os_delay_us(100L);
-			GPIO_OUTPUT_SET(mcu_reset_pin, 1);
+			GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_A);
 			os_delay_us(100L);
 			GPIO_OUTPUT_SET(mcu_isp_pin, 1);
 			os_delay_us(1000L);
@@ -248,9 +256,9 @@ static void ICACHE_FLASH_ATTR serbridgeDisconCb(void *arg) {
 		{
 			if (connData[i].conn_mode == cmAVR) {
 				// send reset to arduino/ARM
-				GPIO_OUTPUT_SET(mcu_reset_pin, 0);
+				GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_B);
 				os_delay_us(100L);
-				GPIO_OUTPUT_SET(mcu_reset_pin, 1);
+				GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_A);
 			}
 			connData[i].conn = NULL;
 		}
@@ -315,7 +323,7 @@ void ICACHE_FLASH_ATTR serbridgeInit(int port, uint8_t reset_pin, uint8_t isp_pi
 	mcu_isp_pin = isp_pin;
 	// set both pins to 1 so we don't cause a reset
 	GPIO_OUTPUT_SET(mcu_isp_pin, 1);
-	GPIO_OUTPUT_SET(mcu_reset_pin, 1);
+	GPIO_OUTPUT_SET(mcu_reset_pin, RESET_STATE_A);
 	// switch pin mux to make these pins GPIO pins
 	makeGpio(mcu_reset_pin);
 	makeGpio(mcu_isp_pin);

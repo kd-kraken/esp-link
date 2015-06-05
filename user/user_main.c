@@ -108,7 +108,7 @@ void user_init(void) {
 	// put MCU into reset in case it interferes with serial-programming of the esp8266
 	//GPIO_OUTPUT_SET(MCU_RESET, 0);
 	// init UART
-	uart_init(BIT_RATE_115200, BIT_RATE_115200);
+	uart_init(BIT_RATE, BIT_RATE);
 	// say hello (leave some time to cause break in TX after boot loader's msg
 	os_delay_us(10000L);
 # define VERS_STR_STR(V) #V
