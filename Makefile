@@ -125,8 +125,8 @@ CFLAGS		= -Os -ggdb -std=c99 -Werror -Wpointer-arith -Wundef -Wall -Wl,-EL -fno-
 		-D__ets__ -DICACHE_FLASH -D_STDINT_H -Wno-address -DFIRMWARE_SIZE=$(ESP_FLASH_MAX) \
 		-DMCU_RESET_PIN=$(MCU_RESET_PIN) -DMCU_ISP_PIN=$(MCU_ISP_PIN) \
 		-DLED_CONN_PIN=$(LED_CONN_PIN) -DLED_SERIAL_PIN=$(LED_SERIAL_PIN) \
-		"-DVERSION=$(VERSION) -DINVERSE_RESET_STATE=$(INVERSE_RESET_STATE) \
-		-DBIT_RATE=$(BIT_RATE)"
+		-DINVERSE_RESET_STATE=$(INVERSE_RESET_STATE) -DBIT_RATE=$(BIT_RATE) \
+		"-DVERSION=$(VERSION)"
 
 # linker flags used to generate the main object file
 LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,--gc-sections
