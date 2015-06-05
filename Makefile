@@ -52,7 +52,7 @@ LED_SERIAL_PIN      ?= 2
 # reset pin instead of the default active high - 0 for normal, 1 for inverse
 INVERSE_RESET_STATE ?= 0
 
-# Set baud rate for mcu and esp comms (115200) recommended
+# Set baud rate for mcu and esp comms (115200 recommended)
 BIT_RATE            ?= 115200
 
 # --------------- esp-link version        ---------------
