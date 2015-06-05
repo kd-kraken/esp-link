@@ -48,6 +48,10 @@ LED_CONN_PIN        ?= 0
 # GPIO pin used for "serial activity" LED, active low
 LED_SERIAL_PIN      ?= 2
 
+# Inverse the reset pin incase your project requirs active low at the
+# reset pin instead of the default active high - 0 for normal, 1 for inverse
+INVERSE_RESET_STATE ?= 0
+
 # --------------- esp-link version        ---------------
 
 # This queries git to produce a version string like "esp-link v0.9.0 2015-06-01 34bc76"
@@ -118,7 +122,7 @@ CFLAGS		= -Os -ggdb -std=c99 -Werror -Wpointer-arith -Wundef -Wall -Wl,-EL -fno-
 		-D__ets__ -DICACHE_FLASH -D_STDINT_H -Wno-address -DFIRMWARE_SIZE=$(ESP_FLASH_MAX) \
 		-DMCU_RESET_PIN=$(MCU_RESET_PIN) -DMCU_ISP_PIN=$(MCU_ISP_PIN) \
 		-DLED_CONN_PIN=$(LED_CONN_PIN) -DLED_SERIAL_PIN=$(LED_SERIAL_PIN) \
-		"-DVERSION=$(VERSION)"
+		"-DVERSION=$(VERSION) -DINVERSE_RESET_STATE=$(INVERSE_RESET_STATE)"
 
 # linker flags used to generate the main object file
 LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,--gc-sections
